@@ -82,18 +82,21 @@ class Room():
             "There are {} doors.".format(len(self.doors))
         )
 
-    def things_in_room(self, level=3, show_hidden=False):
+    def things_in_room(self, level=3, show_hidden=False, flat=False):
         """
         Returns all the things in a room.
 
         Params:
             level: the level of conspicuousness
             show_hidden: if True, won't return things like items in locked cabinet
+            flat: if true return a flat list, else a dict
         """
         things_in_room = {
             'walls': (self.walls),
             'doors': (self.doors)
         }
+        if flat == True:
+            things_in_room = [value for value in things_in_room.values()]
         return things_in_room
 
 # CABINETS:

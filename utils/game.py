@@ -28,8 +28,12 @@ class Menu():
         """
         if not object:
             print("Which object would you like to inspect?\nHit b to go back.")
-            for item in room.things_in_room().keys():
-               print("{}: {}".format(item, item))
+            while True:
+                keyed_items =
+                for i, category in enumerate(room.things_in_room().keys()):
+                    print("{}: {}".format(i, category))
+                print("select an item")
+                if input(">> ").lower() ==
 
         while True:
             user_input = input(">> ")

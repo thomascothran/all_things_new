@@ -36,6 +36,12 @@ class RoomTests(unittest.TestCase):
     def test_whether_room_has_walls(self):
         self.assertTrue(self.test_room.walls is not None)
 
+    def test_whether_things_in_room_returns_dict(self):
+        self.assertEqual(dict, type(self.test_room.things_in_room()))
+
+    def test_whether_flat_object_returns_list(self):
+        self.assertEqual(list, type(self.test_room.things_in_room(flat=True)))
+
 
 class CabinetTests(unittest.TestCase):
     """Tests our cabinet objects."""
