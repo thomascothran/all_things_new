@@ -11,19 +11,34 @@ class Menu():
     with the game.
     """
     def __init__(self):
-        self.default_prompt = (
-            "l: look around",
-            "q: quit",
-        )
+        self.default_prompt = {
+            "l": "look around",
+            "q": "quit",
+        }
 
-    def prompt_user_and_get_user_input(self, room):
-        for line in self.default_prompt: print (line)
+    def prompt_user_and_get_user_input(self, room, prompt=None):
+        """
+        This method takes a user's prompt, then handles the input.
+
+            room: the room the player is in
+            prompt: prompt is a dictionary with the key being the player's command
+             and the value the description of what the command does.
+        """
+        # We need to see if any menu has been supplied
+        print("="*20)
+        if prompt:
+            for key, value in prompt.items():
+                print("{}: {}".format(key, value))
+            print('='*20)
+        for key, value in self.default_prompt.items():
+            print ("{}: {}".format(key, value))
+        print("="*20)
         user_input = input('\n>>')
         while True:
             if user_input.lower() == 'q':
                 sys.exit()
             if user_input.lower() == 'l':
-                print(room.description())
+                print(room.inspect())
                 break
         return True
 
@@ -35,8 +50,10 @@ class Game():
 
     def game_loop(self):
         print(
+            "\n" + "="*20 + "\n" +
             "You wake up in a room without remembering how you got " +
             "there. It is not a room you remember.\n" +
+            "="*20 + "\n" +
 
             "Press h for a list of available commands, or q to quit."
         )
