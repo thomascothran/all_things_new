@@ -34,8 +34,23 @@ class RoomTests(unittest.TestCase):
         pass
 
     def test_whether_room_has_walls(self):
-        print(self.test_room.walls)
         self.assertTrue(self.test_room.walls is not None)
+
+
+class CabinetTests(unittest.TestCase):
+    """Tests our cabinet objects."""
+    def setUp(self):
+        self.test_cabinet = rooms.Cabinet()
+
+    def tearDown(self):
+        pass
+
+    def test_inspecting_cabinet(self):
+        """inspect() method should return str"""
+        self.assertEqual(str, type(self.test_cabinet.inspect()))
+
+    def test_material(self):
+        self.assertIn(self.test_cabinet.material, rooms.cabinet_material)
 
 
 if __name__ == "__main__":

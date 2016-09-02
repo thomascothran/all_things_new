@@ -96,5 +96,27 @@ class Room():
         }
         return things_in_room
 
+# CABINETS:
+# -------------
 
+cabinet_material = ['old wood', 'maple']
+
+class Cabinet():
+    """
+    This represents a cabinet class, which goes in a room.
+    """
+    def __init__(self, random_choice=choose_randomly):
+        self.material = random_choice(cabinet_material)
+
+    def inspect(self, level=2):
+        """
+        Allows user to inspect the Cabinet, returns a string.
+
+        params:
+            level: refers to how closely user is looking at cabinet.
+        """
+        return "a cabinet made out of {}".format(self.material)
+
+    def __str__(self):
+        return "a cabinet"
 
