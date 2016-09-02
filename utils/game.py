@@ -12,19 +12,19 @@ class Menu():
     """
     def __init__(self):
         self.default_prompt = (
-            """
-            l: look around
-            q: quit
-            """
+            "l: look around",
+            "q: quit",
         )
 
     def prompt_user_and_get_user_input(self, room):
-        print(self.default_prompt)
-        user_input = input('\n')
-        if user_input.lower() == 'q':
-            sys.exit()
-        if user_input.lower() == 'l':
-            print(room.description())
+        for line in self.default_prompt: print (line)
+        user_input = input('\n>>')
+        while True:
+            if user_input.lower() == 'q':
+                sys.exit()
+            if user_input.lower() == 'l':
+                print(room.description())
+                break
         return True
 
 
@@ -35,11 +35,10 @@ class Game():
 
     def game_loop(self):
         print(
-            """You wake up in a room without remembering how you got
-            there. It is not a room you remember.
+            "You wake up in a room without remembering how you got " +
+            "there. It is not a room you remember.\n" +
 
-            Press h for a list
-            of available commands, or q to quit."""
+            "Press h for a list of available commands, or q to quit."
         )
         while True:
-            user_input = 'l'
+            Menu().prompt_user_and_get_user_input(self.room)

@@ -45,6 +45,9 @@ class Room():
         self.walls = Walls()
         self.doors = [Door(), Door(),]
 
+    def description(self):
+        return self.walls.description()
+
 
 
 
