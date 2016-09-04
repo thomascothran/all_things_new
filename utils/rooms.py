@@ -96,6 +96,7 @@ class Room():
             'doors': (self.doors)
         }
         if flat == True:
+            # TO DO: I don't think this is returning a completely flat list
             things_in_room = [value for value in things_in_room.values()]
         return things_in_room
 

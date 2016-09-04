@@ -17,6 +17,27 @@ class Menu():
             "q": "quit",
         }
 
+    def select_item(self, list_of_items):
+        """
+        This function takes a list of items and allows the user to select one,
+        returning the item selected.
+        """
+        print("Which object would you like to inspect?\nHit b to go back.")
+        while True:
+            for i, category in enumerate(list_of_items):
+                print("{}: {}".format(i+1, str(category)))
+            print("Select an item\n")
+            user_input = input(">> ")
+            try:
+                user_input = int(user_input)
+                if user_input >= len(list_of_items):
+                    return list_of_items[user_input + 1]
+                else:
+                    print('You did not select a number corresponding to an item.')
+            except:
+                if user_input.lower() == 'b':
+                    break
+
     def inspect(self, room, object=None, level=1):
         """
         This function takes an object to be inspected and prints the string.
@@ -27,13 +48,8 @@ class Menu():
             level: the scrutiny the player is giving the object
         """
         if not object:
-            print("Which object would you like to inspect?\nHit b to go back.")
-            while True:
-                keyed_items =
-                for i, category in enumerate(room.things_in_room().keys()):
-                    print("{}: {}".format(i, category))
-                print("select an item")
-                if input(">> ").lower() ==
+            object = self.select_item(room.things_in_room(flat=True))
+
 
         while True:
             user_input = input(">> ")
