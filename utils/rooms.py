@@ -54,12 +54,24 @@ class Door():
 
     def inspect(self, level=3):
         """
-        This method allows the user to inspect the door, it returns a string description.
+        This method allows the user to inspect the door, it returns a string.
 
         Params:
             level: revers to the level of detail to return. Users can more or less
             closely inspect objects and get more or less detailed descriptions
         """
+        return_message = ''
+        if self.deadbolt:
+            return_message += 'The door has a deadbolt. '
+        else:
+            return_message += 'The door has no deadbolt. '
+
+        if self.locked:
+            return_message += 'You try the door. It is locked. '
+        else:
+            return_message += 'You try the door. The knob turns, and the door cracks open'
+
+        return return_message
 
     def __str__(self):
         return "a door"
@@ -82,22 +94,22 @@ class Room():
             "There are {} doors.".format(len(self.doors))
         )
 
-    def things_in_room(self, level=3, show_hidden=False, flat=False):
+    def things_in_room(self, level=3, show_hidden=False, flat=True):
         """
         Returns all the things in a room.
 
         Params:
             level: the level of conspicuousness
             show_hidden: if True, won't return things like items in locked cabinet
-            flat: if true return a flat list, else a dict
+            flat: returns all items as a list
         """
-        things_in_room = {
-            'walls': (self.walls),
-            'doors': (self.doors)
-        }
         if flat == True:
-            # TO DO: I don't think this is returning a completely flat list
-            things_in_room = [value for value in things_in_room.values()]
+            things_in_room = []
+            things_in_room.append(self.walls)
+            for door in self.doors:
+                things_in_room.append(door)
+        else:
+            raise NotImplementedError
         return things_in_room
 
 # CABINETS:

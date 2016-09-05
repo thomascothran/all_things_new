@@ -1,9 +1,20 @@
 """The game object."""
 
-import sys
+import sys, logging
 
 from utils.rooms import Room
 
+
+# Helper functions
+def get_user_input():
+    """
+    Get user input and returns their input. This helps with testing.
+    """
+    user_input = input(">> ")
+    return user_input
+
+
+# Classes
 
 class Menu():
     """
@@ -17,24 +28,29 @@ class Menu():
             "q": "quit",
         }
 
-    def select_item(self, list_of_items):
+
+    def select_item(self, list_of_items, get_user_input=get_user_input):
         """
         This function takes a list of items and allows the user to select one,
         returning the item selected.
+
+        Params:
+        list_of_items is a list of items the user should be able to select.
+        get_user_input specifies how to get the user's input (aids with tests)
         """
         print("Which object would you like to inspect?\nHit b to go back.")
         while True:
             for i, category in enumerate(list_of_items):
                 print("{}: {}".format(i+1, str(category)))
             print("Select an item\n")
-            user_input = input(">> ")
+            user_input = get_user_input()
             try:
                 user_input = int(user_input)
-                if user_input >= len(list_of_items):
-                    return list_of_items[user_input + 1]
+                if user_input <= len(list_of_items):
+                    return list_of_items[user_input - 1]
                 else:
                     print('You did not select a number corresponding to an item.')
-            except:
+            except TypeError:
                 if user_input.lower() == 'b':
                     break
 
@@ -49,12 +65,11 @@ class Menu():
         """
         if not object:
             object = self.select_item(room.things_in_room(flat=True))
+        return_message = object.inspect()
+        print('\n')
+        print(return_message)
 
 
-        while True:
-            user_input = input(">> ")
-            if user_input.lower() == 'b':
-                break
 
 
 
