@@ -3,6 +3,7 @@
 import sys, logging
 
 from utils.rooms import Room
+from utils import objects
 
 
 # Helper functions
@@ -21,12 +22,20 @@ class Menu():
     This is a generic menu option that can be used to interact
     with the game.
     """
-    def __init__(self):
+    def __init__(self, game=None):
+        """
+        Initializes the menu
+
+        params:
+            game: is the current game, It is optional, because it often isn't needed
+        """
+        self.game = game
         self.default_prompt = {
             "l": "look around",
             "i": "inspect an object",
             "o": "open something",
             "q": "quit",
+            "t": "take",
         }
 
     def select_item(self, list_of_items, get_user_input=get_user_input):
@@ -38,7 +47,7 @@ class Menu():
         list_of_items is a list of items the user should be able to select.
         get_user_input specifies how to get the user's input (aids with tests)
         """
-        print("Which object would you like to inspect?\nHit b to go back.")
+        print("Which object would you like to select?\nHit b to go back.")
         while True:
             for i, category in enumerate(list_of_items):
                 print("{}: {}".format(i+1, str(category)))
@@ -50,7 +59,7 @@ class Menu():
                     return list_of_items[user_input - 1]
                 else:
                     print('You did not select a number corresponding to an item.')
-            except TypeError:
+            except ValueError:
                 if user_input.lower() == 'b':
                     break
 
@@ -79,6 +88,16 @@ class Menu():
         print('\n')
         print(return_message)
 
+    def take_object(self, room, player, object=None):
+        """
+        This function allows you to take things and add them to your inventory.
+        """
+        if not object:
+            object = self.select_item(room.things_inside(flat=True))
+        return_message = object.take(player=player)
+        print(return_message)
+
+
 
     def prompt_user_and_get_user_input(self, room, prompt=None, get_user_input=get_user_input):
         """
@@ -95,9 +114,6 @@ class Menu():
         if prompt:
             for key, value in prompt.items():
                 print("{}: {}".format(key, value))
-            print('='*20)
-        for key, value in self.default_prompt.items():
-            print ("{}: {}".format(key, value))
         print("="*20)
         user_input = get_user_input()
         while True:
@@ -110,10 +126,19 @@ class Menu():
                 self.inspect(room)
                 break
             elif user_input.lower() == 'o':
+                self.open_object(room)
+                break
+            elif user_input.lower() == 't':
+                # TO DO: Handle picking up objects
                 try:
-                    self.open_object(room)
-                except NotImplementedError:
-                    "I'm sorry, you can't do that."
+                    self.take_object(room, player=self.game.player)
+                    break
+                except Exception as e:
+                    print('Error: ', e)
+                    sys.exit()
+            else:
+                for key, value in self.default_prompt.items():
+                    print ("{}: {}".format(key, value))
                 break
         return True
 
@@ -122,6 +147,7 @@ class Game():
     """The game object keeps track of the game."""
     def __init__(self):
         self.room = Room()
+        self.player = Player()
 
     def game_loop(self):
         print(
@@ -133,4 +159,10 @@ class Game():
             "Press h for a list of available commands, or q to quit."
         )
         while True:
-            Menu().prompt_user_and_get_user_input(self.room)
+            Menu(game=self).prompt_user_and_get_user_input(self.room)
+
+
+class Player():
+    """The player object"""
+    def __init__(self):
+        self.inventory = []

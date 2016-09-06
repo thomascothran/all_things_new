@@ -1,5 +1,6 @@
 """Contains the room functionality."""
 import random, sys
+from utils import objects
 
 from utils import game
 
@@ -45,7 +46,7 @@ class Walls():
 # DOORS
 # --------------
 
-door_colors = ('brown', 'grey', 'white', 'peach')
+door_colors = ('brown', 'grey', 'white', 'peach', 'brown')
 
 class Door():
     """Represents doors in a room."""
@@ -56,6 +57,7 @@ class Door():
         else:
             self.locked = locked
         self.deadbolt = random_choice([True, False])
+        self.color = choose_randomly(door_colors)
 
     def inspect(self, level=3):
         """
@@ -87,7 +89,7 @@ class Door():
             sys.exit()
 
     def __str__(self):
-        return "a door"
+        return "a {} door".format(self.color)
 
 
 class Room():
@@ -104,6 +106,7 @@ class Room():
         params:
           level: refers to the detail with which the object is examined.
         """
+
         return (
             self.walls.inspect() + ' '
             "There are {} doors.".format(len(self.doors)) + ' ' +
@@ -125,6 +128,11 @@ class Room():
             for door in self.doors:
                 things_in_room.append(door)
             for other_things in self.things_in_room:
+                try:
+                    if other_things.contents and other_things.closed == False:
+                        for i in other_things.contents: things_in_room.append(i)
+                except Exception as e:
+                    print('Error', e)
                 things_in_room.append(other_things)
         else:
             raise NotImplementedError
@@ -133,7 +141,7 @@ class Room():
 # CABINETS:
 # -------------
 
-cabinet_material = ['old wood', 'maple']
+cabinet_material = ['old wood', 'maple', 'steel', 'plywood']
 
 class Cabinet():
     """
@@ -142,6 +150,7 @@ class Cabinet():
     def __init__(self, random_choice=choose_randomly):
         self.material = random_choice(cabinet_material)
         self.closed = True
+        self.contents = [objects.Key(),]
 
     def inspect(self, level=2):
         """
@@ -161,7 +170,8 @@ class Cabinet():
         """
         self.closed = False
         if self.things_inside():
-            menu.select_item(self.things_inside)
+            # TO DO: fix this so multiple items will show up
+            return "Inside the cabinet, you see {}".format(self.things_inside()[0])
         else:
             return "There is nothing inside the Cabinet."
 
@@ -169,10 +179,10 @@ class Cabinet():
         """
         Returns a list of the things inside the Cabinet
         """
-        return []
+        return self.contents
 
     def __str__(self):
-        return "a cabinet"
+        return "a {} cabinet".format(self.material)
 
 # KEY:
 # ------
