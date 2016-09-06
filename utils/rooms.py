@@ -185,7 +185,7 @@ class Cabinet():
         """
         return "You see a cabinet made out of {}".format(self.material)
 
-    def open_object(self, menu, player=None):
+    def open_object(self, menu, player):
         """
         We want the user to be able to open the cabinet and get things inside.
 
@@ -196,8 +196,14 @@ class Cabinet():
         if self.things_inside():
             # TO DO: fix this so multiple items will show up
             if any(isinstance(thing, npcs.Monster) for thing in self.things_inside()):
-                return "Monster attack!"
-            return "Inside the cabinet, you see {}".format(self.things_inside()[0])
+                # TO DO: Don't use print statement!
+                monster = [i for i in self.things_inside() if isinstance(i, npcs.Monster)][0]
+                print('Monster attack!')
+                battle = game.Battle(player, monster)
+                battle.battle_loop()
+                return "You killed the monster!"
+            else:
+                return "Inside the cabinet, you see {}".format(self.things_inside()[0])
         else:
             return "There is nothing inside the Cabinet."
 

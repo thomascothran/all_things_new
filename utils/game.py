@@ -163,3 +163,27 @@ class Player():
     def __init__(self):
         self.inventory = []
         self.health = 100
+
+    def attack(self, opponent, attack_strength=40):
+        opponent.health -= attack_strength
+        # TO DO: Refactor so we're not directly using print
+        if opponent.health > 0:
+            print('You attack. Opponent health is {}'.format(opponent.health))
+        else:
+            print('You won!')
+
+
+class Battle():
+    """Controls battles"""
+    def __init__(self, player, opponent):
+        self.player = player
+        self.opponent = opponent
+
+    def battle_loop(self):
+        # Next tells who's up to attack
+        next_attacker = self.player
+        next_attacked = self.opponent
+
+        while self.player.health > 0 and self.opponent.health > 0:
+            next_attacker.attack(next_attacked)
+            next_attacker, next_attacked = next_attacked, next_attacker
