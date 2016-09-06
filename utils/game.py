@@ -69,25 +69,27 @@ class Menu():
         print('\n')
         print(return_message)
 
-    def open(self, room, object=None):
+    def open_object(self, room, object=None):
         """
         This function allows you to open things.
         """
         if not object:
             object = self.select_item(room.things_inside(flat=True))
-        return_message = object.open(self)
+        return_message = object.open_object(self)
         print('\n')
         print(return_message)
 
 
-    def prompt_user_and_get_user_input(self, room, prompt=None):
+    def prompt_user_and_get_user_input(self, room, prompt=None, get_user_input=get_user_input):
         """
         This method takes a user's prompt, then handles the input.
 
             room: the room the player is in
             prompt: prompt is a dictionary with the key being the player's command
              and the value the description of what the command does.
+            get_user_input is the function we use to get the user's input
         """
+
         # We need to see if any menu has been supplied
         print("="*20)
         if prompt:
@@ -97,7 +99,7 @@ class Menu():
         for key, value in self.default_prompt.items():
             print ("{}: {}".format(key, value))
         print("="*20)
-        user_input = input('\n>>')
+        user_input = get_user_input()
         while True:
             if user_input.lower() == 'q':
                 sys.exit()
@@ -108,7 +110,10 @@ class Menu():
                 self.inspect(room)
                 break
             elif user_input.lower() == 'o':
-                self.open(room)
+                try:
+                    self.open_object(room)
+                except:
+                    "I'm sorry, you can't do that."
                 break
         return True
 

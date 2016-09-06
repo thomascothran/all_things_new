@@ -1,5 +1,5 @@
 """Contains the room functionality."""
-import random
+import random, sys
 
 from utils import game
 
@@ -49,10 +49,13 @@ door_colors = ('brown', 'grey', 'white', 'peach')
 
 class Door():
     """Represents doors in a room."""
-    def __init__(self, random_choice=choose_randomly):
-        self.locked = random_choice([True, False])
+    def __init__(self, locked=None, random_choice=choose_randomly):
+        # Check to see if locked is specified
+        if locked == None:
+            self.locked = random_choice([True, False])
+        else:
+            self.locked = locked
         self.deadbolt = random_choice([True, False])
-
 
     def inspect(self, level=3):
         """
@@ -75,6 +78,14 @@ class Door():
 
         return return_message
 
+    def open_object(self, room):
+        if self.locked:
+            return 'You try the door, but it is locked; the knob won\'t turn.'
+        else:
+            # TO DO: fix this so it returns user input rather than printing it
+            print('The door swings open. You\'re free!')
+            sys.exit()
+
     def __str__(self):
         return "a door"
 
@@ -83,8 +94,9 @@ class Room():
     """This object represents a room."""
     def __init__(self):
         self.walls = Walls()
-        self.doors = [Door(), Door()]
+        self.doors = [Door(locked=False), Door(locked=True)]
         self.things_in_room = [Cabinet()]
+
 
     def inspect(self, level=1):
         """
@@ -140,7 +152,7 @@ class Cabinet():
         """
         return "You see a cabinet made out of {}".format(self.material)
 
-    def open(self, menu):
+    def open_object(self, menu):
         """
         We want the user to be able to open the cabinet and get things inside.
 
