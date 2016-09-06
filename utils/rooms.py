@@ -195,6 +195,8 @@ class Cabinet():
         self.closed = False
         if self.things_inside():
             # TO DO: fix this so multiple items will show up
+            if any(isinstance(thing, npcs.Monster) for thing in self.things_inside()):
+                return "Monster attack!"
             return "Inside the cabinet, you see {}".format(self.things_inside()[0])
         else:
             return "There is nothing inside the Cabinet."
