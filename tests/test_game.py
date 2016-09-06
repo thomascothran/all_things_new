@@ -18,4 +18,3 @@ class MenuTest(unittest.TestCase):
             get_user_input=lambda: '1',  # Select first item from list
         )
         self.assertEqual(returned_item, self.test_door)
-        # TO DO: Figure out how to test user input.

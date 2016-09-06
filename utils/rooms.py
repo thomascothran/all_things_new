@@ -1,6 +1,8 @@
 """Contains the room functionality."""
 import random
 
+from utils import game
+
 ####################
 # Helper functions#
 ##################
@@ -43,7 +45,7 @@ class Walls():
 # DOORS
 # --------------
 
-door_colors = ('brown', 'grey')
+door_colors = ('brown', 'grey', 'white', 'peach')
 
 class Door():
     """Represents doors in a room."""
@@ -81,7 +83,8 @@ class Room():
     """This object represents a room."""
     def __init__(self):
         self.walls = Walls()
-        self.doors = [Door(), Door(),]
+        self.doors = [Door(), Door()]
+        self.things_in_room = [Cabinet()]
 
     def inspect(self, level=1):
         """
@@ -91,10 +94,11 @@ class Room():
         """
         return (
             self.walls.inspect() + ' '
-            "There are {} doors.".format(len(self.doors))
+            "There are {} doors.".format(len(self.doors)) + ' ' +
+            'You also see a cabinet.'
         )
 
-    def things_in_room(self, level=3, show_hidden=False, flat=True):
+    def things_inside(self, level=3, show_hidden=False, flat=True):
         """
         Returns all the things in a room.
 
@@ -108,6 +112,8 @@ class Room():
             things_in_room.append(self.walls)
             for door in self.doors:
                 things_in_room.append(door)
+            for other_things in self.things_in_room:
+                things_in_room.append(other_things)
         else:
             raise NotImplementedError
         return things_in_room
@@ -123,6 +129,7 @@ class Cabinet():
     """
     def __init__(self, random_choice=choose_randomly):
         self.material = random_choice(cabinet_material)
+        self.closed = True
 
     def inspect(self, level=2):
         """
@@ -131,8 +138,29 @@ class Cabinet():
         params:
             level: refers to how closely user is looking at cabinet.
         """
-        return "a cabinet made out of {}".format(self.material)
+        return "You see a cabinet made out of {}".format(self.material)
+
+    def open(self, menu):
+        """
+        We want the user to be able to open the cabinet and get things inside.
+
+        Params:
+            menu: the menu object
+        """
+        self.closed = False
+        if self.things_inside():
+            menu.select_item(self.things_inside)
+        else:
+            return "There is nothing inside the Cabinet."
+
+    def things_inside(self):
+        """
+        Returns a list of the things inside the Cabinet
+        """
+        return []
 
     def __str__(self):
         return "a cabinet"
 
+# KEY:
+# ------

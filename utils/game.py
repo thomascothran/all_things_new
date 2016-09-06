@@ -25,9 +25,9 @@ class Menu():
         self.default_prompt = {
             "l": "look around",
             "i": "inspect an object",
+            "o": "open something",
             "q": "quit",
         }
-
 
     def select_item(self, list_of_items, get_user_input=get_user_input):
         """
@@ -64,13 +64,20 @@ class Menu():
             level: the scrutiny the player is giving the object
         """
         if not object:
-            object = self.select_item(room.things_in_room(flat=True))
+            object = self.select_item(room.things_inside(flat=True))
         return_message = object.inspect()
         print('\n')
         print(return_message)
 
-
-
+    def open(self, room, object=None):
+        """
+        This function allows you to open things.
+        """
+        if not object:
+            object = self.select_item(room.things_inside(flat=True))
+        return_message = object.open(self)
+        print('\n')
+        print(return_message)
 
 
     def prompt_user_and_get_user_input(self, room, prompt=None):
@@ -99,6 +106,9 @@ class Menu():
                 break
             elif user_input.lower() == 'i':
                 self.inspect(room)
+                break
+            elif user_input.lower() == 'o':
+                self.open(room)
                 break
         return True
 

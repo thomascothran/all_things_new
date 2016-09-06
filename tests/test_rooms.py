@@ -42,7 +42,7 @@ class RoomTests(unittest.TestCase):
         # self.assertEqual(dict, type(self.test_room.things_in_room()))
 
     def test_whether_flat_object_returns_list(self):
-        self.assertEqual(list, type(self.test_room.things_in_room(flat=True)))
+        self.assertEqual(list, type(self.test_room.things_inside(flat=True)))
 
 
 class CabinetTests(unittest.TestCase):
