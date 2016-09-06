@@ -112,7 +112,7 @@ class Menu():
             elif user_input.lower() == 'o':
                 try:
                     self.open_object(room)
-                except:
+                except NotImplementedError:
                     "I'm sorry, you can't do that."
                 break
         return True
