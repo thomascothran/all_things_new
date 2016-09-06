@@ -80,8 +80,14 @@ class Door():
 
         return return_message
 
-    def open_object(self, room):
+    def open_object(self, room, player):
         if self.locked:
+            if any(isinstance(item, objects.Key) for item in player.inventory):
+                print(
+                    'The door is locked, but you use the key. The door swings ' +
+                    'open, and you are free!'
+                )
+                sys.exit()
             return 'You try the door, but it is locked; the knob won\'t turn.'
         else:
             # TO DO: fix this so it returns user input rather than printing it
@@ -96,7 +102,7 @@ class Room():
     """This object represents a room."""
     def __init__(self):
         self.walls = Walls()
-        self.doors = [Door(locked=False), Door(locked=True)]
+        self.doors = [Door(locked=True), Door(locked=True)]
         self.things_in_room = [Cabinet()]
 
 
@@ -161,7 +167,7 @@ class Cabinet():
         """
         return "You see a cabinet made out of {}".format(self.material)
 
-    def open_object(self, menu):
+    def open_object(self, menu, player=None):
         """
         We want the user to be able to open the cabinet and get things inside.
 

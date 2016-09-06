@@ -75,16 +75,15 @@ class Menu():
         if not object:
             object = self.select_item(room.things_inside(flat=True))
         return_message = object.inspect()
-        print('\n')
         print(return_message)
 
-    def open_object(self, room, object=None):
+    def open_object(self, room, player, object=None):
         """
         This function allows you to open things.
         """
         if not object:
             object = self.select_item(room.things_inside(flat=True))
-        return_message = object.open_object(self)
+        return_message = object.open_object(self, player)
         print('\n')
         print(return_message)
 
@@ -110,7 +109,6 @@ class Menu():
         """
 
         # We need to see if any menu has been supplied
-        print("="*20)
         if prompt:
             for key, value in prompt.items():
                 print("{}: {}".format(key, value))
@@ -126,7 +124,7 @@ class Menu():
                 self.inspect(room)
                 break
             elif user_input.lower() == 'o':
-                self.open_object(room)
+                self.open_object(room, self.game.player)
                 break
             elif user_input.lower() == 't':
                 # TO DO: Handle picking up objects
@@ -154,8 +152,6 @@ class Game():
             "\n" + "="*20 + "\n" +
             "You wake up in a room without remembering how you got " +
             "there. It is not a room you remember.\n" +
-            "="*20 + "\n" +
-
             "Press h for a list of available commands, or q to quit."
         )
         while True:
