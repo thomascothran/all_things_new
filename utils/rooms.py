@@ -1,7 +1,7 @@
 """Contains the room functionality."""
 import random, sys
 from utils import objects
-
+from utils import npcs
 from utils import game
 
 ####################
@@ -103,7 +103,7 @@ class Room():
     def __init__(self):
         self.walls = Walls()
         self.doors = [Door(locked=True), Door(locked=True)]
-        self.things_in_room = [Cabinet()]
+        self.things_in_room = [Cabinet(), Cabinet(monster=True)]
 
 
     def inspect(self, level=1):
@@ -112,12 +112,27 @@ class Room():
         params:
           level: refers to the detail with which the object is examined.
         """
+        message = ''
+        message += self.walls.inspect() + ''
+        if len(self.things_in_room) == 1:
+            message += 'You also see {}. '.format(self.things_in_room[0])
+        elif len(self.things_in_room) == 2:
+            message += 'You also see {} and {}'.format(
+                self.things_in_room[0],
+                self.things_in_room[1]
+            )
+        elif len(self.things_in_room) > 2:
+            # We need a substring for everything but the first and list item
+            # in the list
+            middle_items = self.things_in_room[1:-1]
+            substring = ''
+            for item in middle_items:
+                substring = "{} and ".format(item)
+            message += 'You also see {} {} {}'.format(
+                self.things_in_room[0], substring, self.things_in_room[-1]
+            )
 
-        return (
-            self.walls.inspect() + ' '
-            "There are {} doors.".format(len(self.doors)) + ' ' +
-            'You also see a cabinet.'
-        )
+        return message
 
     def things_inside(self, level=3, show_hidden=False, flat=True):
         """
@@ -153,10 +168,13 @@ class Cabinet():
     """
     This represents a cabinet class, which goes in a room.
     """
-    def __init__(self, random_choice=choose_randomly):
+    def __init__(self, random_choice=choose_randomly, monster=False):
         self.material = random_choice(cabinet_material)
         self.closed = True
         self.contents = [objects.Key(),]
+
+        if monster:
+            self.contents.append(npcs.Monster())
 
     def inspect(self, level=2):
         """

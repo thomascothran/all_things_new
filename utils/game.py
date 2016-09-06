@@ -162,3 +162,4 @@ class Player():
     """The player object"""
     def __init__(self):
         self.inventory = []
+        self.health = 100
