@@ -90,7 +90,7 @@ class Menu():
             return_message = object.open_object(self, player)
             print('\n')
             print(return_message)
-        except:
+        except AttributeError:
             print("You can't open that.")
 
     def take_object(self, room, player, object=None):
@@ -124,32 +124,24 @@ class Menu():
             print("{}: {}".format(key, value))
         print("="*20)
         user_input = get_user_input()
-        while True:
-            if user_input.lower() == 'q':
+
+        if user_input.lower() == 'q':
+            sys.exit()
+        elif user_input.lower() == 'b':
+            pass
+        elif user_input.lower() == 'l':
+            print(room.inspect())
+        elif user_input.lower() == 'i':
+            self.inspect(room)
+        elif user_input.lower() == 'o':
+            self.open_object(room, self.game.player)
+        elif user_input.lower() == 't':
+            # TO DO: Handle picking up objects
+            try:
+                self.take_object(room, player=self.game.player)
+            except Exception as e:
+                print('Error: ', e)
                 sys.exit()
-            elif user_input.lower() == 'b':
-                break
-            elif user_input.lower() == 'l':
-                print(room.inspect())
-                break
-            elif user_input.lower() == 'i':
-                self.inspect(room)
-                break
-            elif user_input.lower() == 'o':
-                self.open_object(room, self.game.player)
-                break
-            elif user_input.lower() == 't':
-                # TO DO: Handle picking up objects
-                try:
-                    self.take_object(room, player=self.game.player)
-                    break
-                except Exception as e:
-                    print('Error: ', e)
-                    sys.exit()
-            else:
-                for key, value in self.default_prompt.items():
-                    print ("{}: {}".format(key, value))
-                break
 
 class Game():
     """The game object keeps track of the game."""
