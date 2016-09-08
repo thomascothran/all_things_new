@@ -4,6 +4,7 @@ import sys, logging, os, time
 
 from utils.rooms import Room
 from utils import objects
+from utils import hud
 
 
 # Helper functions
@@ -76,7 +77,7 @@ class Menu():
             if not object:
                 object = self.select_item(room.things_inside(flat=True))
             return_message = object.inspect()
-            print(return_message)
+            hud.display_to_user(self.default_prompt, return_message)
         except AttributeError:
             print('Going back')
 
@@ -105,7 +106,7 @@ class Menu():
         except AttributeError:
             print('You cannot take that.')
 
-    def prompt_user_and_get_user_input(self, room, prompt=None, get_user_input=get_user_input):
+    def prompt_user_and_get_user_input(self, room, prompt=None, get_user_input=get_user_input, message=None):
         """
         This method takes a user's prompt, then handles the input.
 
@@ -118,9 +119,8 @@ class Menu():
         # We need to add default menu if none supplied
         if not prompt:
             prompt=self.default_prompt
-        for key, value in prompt.items():
-            print("{}: {}".format(key, value))
-        print("="*20)
+
+        hud.display_to_user(menu=prompt, message=message)
         user_input = get_user_input()
 
         if user_input.lower() == 'q':
@@ -128,7 +128,7 @@ class Menu():
         elif user_input.lower() == 'b':
             pass
         elif user_input.lower() == 'l':
-            print(room.inspect())
+            self.prompt_user_and_get_user_input(room, message=room.inspect())
         elif user_input.lower() == 'i':
             self.inspect(room)
         elif user_input.lower() == 'o':
@@ -148,13 +148,16 @@ class Game():
         self.player = Player()
 
     def game_loop(self):
-        print(
-            "\n" + "="*20 + "\n" +
+        message = (
             "You wake up in a room without remembering how you got " +
             "there. It is not a room you remember.\n" +
             "Press h for a list of available commands, or q to quit. " +
             "Hit any key to start"
         )
+        hud.display_to_user(menu=None, message=message)
+        user_input = get_user_input()
+        if user_input.lower() == 'q':
+            sys.exit()
         while True:
             Menu(game=self).prompt_user_and_get_user_input(self.room)
 
