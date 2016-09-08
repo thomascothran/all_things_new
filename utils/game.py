@@ -105,8 +105,6 @@ class Menu():
         except AttributeError:
             print('You cannot take that.')
 
-
-
     def prompt_user_and_get_user_input(self, room, prompt=None, get_user_input=get_user_input):
         """
         This method takes a user's prompt, then handles the input.

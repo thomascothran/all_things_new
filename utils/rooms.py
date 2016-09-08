@@ -113,7 +113,14 @@ class Room():
           level: refers to the detail with which the object is examined.
         """
         message = ''
-        message += self.walls.inspect() + ''
+        message += self.walls.inspect() + ' '
+
+        if len(self.doors) == 1:
+            message += 'There is one door. '
+        elif len(self.doors) > 1:
+            message += 'There are {} doors. '.format(len(self.doors))
+
+        # Need the things in the room
         if len(self.things_in_room) == 1:
             message += 'You also see {}. '.format(self.things_in_room[0])
         elif len(self.things_in_room) == 2:
