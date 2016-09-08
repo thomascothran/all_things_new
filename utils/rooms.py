@@ -194,9 +194,10 @@ class Cabinet():
         """
         self.closed = False
         if self.things_inside():
-            # TO DO: fix this so multiple items will show up
+            # TODO: fix this so multiple items will show up
             if any(isinstance(thing, npcs.Monster) for thing in self.things_inside()):
-                # TO DO: Don't use print statement!
+                # TODO: Don't use print statement!
+                # TODO: you're just grabbing one monster here. Sort of a hackey solution.
                 monster = [i for i in self.things_inside() if isinstance(i, npcs.Monster)][0]
                 print('Monster attack!')
                 battle = game.Battle(player, monster)

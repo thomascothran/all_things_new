@@ -22,4 +22,7 @@ class Monster():
             print('The monster killed you.')
             sys.exit()
 
+    def __str__(self):
+        return "monster"
+
 
