@@ -201,6 +201,7 @@ class Cabinet():
                 print('Monster attack!')
                 battle = game.Battle(player, monster)
                 battle.battle_loop()
+                self.contents.remove(monster)
                 return "You killed the monster!"
             else:
                 return "Inside the cabinet, you see {}".format(self.things_inside()[0])

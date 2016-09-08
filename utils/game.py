@@ -1,6 +1,6 @@
 """The game object."""
 
-import sys, logging, os
+import sys, logging, os, time
 
 from utils.rooms import Room
 from utils import objects
@@ -196,5 +196,8 @@ class Battle():
         next_attacked = self.opponent
 
         while self.player.health > 0 and self.opponent.health > 0:
+            time.sleep(1)
             next_attacker.attack(next_attacked)
+            time.sleep(1)
             next_attacker, next_attacked = next_attacked, next_attacker
+
