@@ -130,7 +130,7 @@ class Menu():
         elif user_input.lower() == 'l':
             self.prompt_user_and_get_user_input(room, message=room.inspect())
         elif user_input.lower() == 'i':
-            self.inspect(room)
+            self.prompt_user_and_get_user_input(room, message=self.inspect(room))
         elif user_input.lower() == 'o':
             self.open_object(room, self.game.player)
         elif user_input.lower() == 't':
