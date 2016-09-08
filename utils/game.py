@@ -1,6 +1,6 @@
 """The game object."""
 
-import sys, logging
+import sys, logging, os
 
 from utils.rooms import Room
 from utils import objects
@@ -72,29 +72,38 @@ class Menu():
             room: the room the player is in
             level: the scrutiny the player is giving the object
         """
-        if not object:
-            object = self.select_item(room.things_inside(flat=True))
-        return_message = object.inspect()
-        print(return_message)
+        try:
+            if not object:
+                object = self.select_item(room.things_inside(flat=True))
+            return_message = object.inspect()
+            print(return_message)
+        except AttributeError:
+            print('Going back')
 
     def open_object(self, room, player, object=None):
         """
         This function allows you to open things.
         """
-        if not object:
-            object = self.select_item(room.things_inside(flat=True))
-        return_message = object.open_object(self, player)
-        print('\n')
-        print(return_message)
+        try:
+            if not object:
+                object = self.select_item(room.things_inside(flat=True))
+            return_message = object.open_object(self, player)
+            print('\n')
+            print(return_message)
+        except:
+            print("You can't open that.")
 
     def take_object(self, room, player, object=None):
         """
         This function allows you to take things and add them to your inventory.
         """
-        if not object:
-            object = self.select_item(room.things_inside(flat=True))
-        return_message = object.take(player=player)
-        print(return_message)
+        try:
+            if not object:
+                object = self.select_item(room.things_inside(flat=True))
+            return_message = object.take(player=player)
+            print(return_message)
+        except AttributeError:
+            print('You cannot take that.')
 
 
 
@@ -108,15 +117,18 @@ class Menu():
             get_user_input is the function we use to get the user's input
         """
 
-        # We need to see if any menu has been supplied
-        if prompt:
-            for key, value in prompt.items():
-                print("{}: {}".format(key, value))
+        # We need to add default menu if none supplied
+        if not prompt:
+            prompt=self.default_prompt
+        for key, value in prompt.items():
+            print("{}: {}".format(key, value))
         print("="*20)
         user_input = get_user_input()
         while True:
             if user_input.lower() == 'q':
                 sys.exit()
+            elif user_input.lower() == 'b':
+                break
             elif user_input.lower() == 'l':
                 print(room.inspect())
                 break
@@ -138,8 +150,6 @@ class Menu():
                 for key, value in self.default_prompt.items():
                     print ("{}: {}".format(key, value))
                 break
-        return True
-
 
 class Game():
     """The game object keeps track of the game."""
@@ -152,7 +162,8 @@ class Game():
             "\n" + "="*20 + "\n" +
             "You wake up in a room without remembering how you got " +
             "there. It is not a room you remember.\n" +
-            "Press h for a list of available commands, or q to quit."
+            "Press h for a list of available commands, or q to quit. " +
+            "Hit any key to start"
         )
         while True:
             Menu(game=self).prompt_user_and_get_user_input(self.room)
