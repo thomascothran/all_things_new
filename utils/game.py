@@ -39,7 +39,7 @@ class Menu():
             "t": "take",
         }
 
-    def select_item(self, list_of_items, get_user_input=get_user_input):
+    def select_item(self, list_of_items, get_user_input=get_user_input, message="Select an item"):
         """
         This function takes a list of items and allows the user to select one,
         returning the item selected.
@@ -50,9 +50,10 @@ class Menu():
         """
         print("Which object would you like to select?\nHit b to go back.")
         while True:
-            for i, category in enumerate(list_of_items):
-                print("{}: {}".format(i+1, str(category)))
-            print("Select an item\n")
+            menu = {index + 1: item for index, item in enumerate(list_of_items)}
+            # for i, category in enumerate(list_of_items):
+            #     print("{}: {}".format(i+1, str(category)))
+            hud.display_to_user(menu, message)
             user_input = get_user_input()
             try:
                 user_input = int(user_input)
@@ -77,9 +78,9 @@ class Menu():
             if not object:
                 object = self.select_item(room.things_inside(flat=True))
             return_message = object.inspect()
-            hud.display_to_user(self.default_prompt, return_message)
+            self.prompt_user_and_get_user_input(room, prompt=self.default_prompt, message=return_message)
         except AttributeError:
-            print('Going back')
+            self.prompt_user_and_get_user_input(room, prompt=self.default_prompt, message='Going back.')
 
     def open_object(self, room, player, object=None):
         """
@@ -89,8 +90,7 @@ class Menu():
             if not object:
                 object = self.select_item(room.things_inside(flat=True))
             return_message = object.open_object(self, player)
-            print('\n')
-            print(return_message)
+            self.prompt_user_and_get_user_input(room, message=return_message)
         except AttributeError:
             print("You can't open that.")
 
@@ -102,9 +102,9 @@ class Menu():
             if not object:
                 object = self.select_item(room.things_inside(flat=True))
             return_message = object.take(player=player)
-            print(return_message)
+            self.prompt_user_and_get_user_input(room, message=return_message)
         except AttributeError:
-            print('You cannot take that.')
+            self.prompt_user_and_get_user_input(room, message="You can't take that.")
 
     def prompt_user_and_get_user_input(self, room, prompt=None, get_user_input=get_user_input, message=None):
         """
@@ -132,7 +132,7 @@ class Menu():
         elif user_input.lower() == 'i':
             self.prompt_user_and_get_user_input(room, message=self.inspect(room))
         elif user_input.lower() == 'o':
-            self.open_object(room, self.game.player)
+            self.prompt_user_and_get_user_input(room, message=self.open_object(room, self.game.player))
         elif user_input.lower() == 't':
             # TO DO: Handle picking up objects
             try:
